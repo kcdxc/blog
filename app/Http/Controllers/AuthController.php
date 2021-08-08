@@ -53,6 +53,14 @@ class AuthController extends Controller
             'password' => 'required|min:8|string',
         ]);
 
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Request input errors.',
+                'data' => $validator->errors()
+            ]);
+        }
+
         $credentials = $request->only(['email', 'password']);
 
         if (!$token = Auth::attempt($credentials)) {

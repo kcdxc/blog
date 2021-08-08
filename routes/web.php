@@ -29,3 +29,12 @@ $router->group(['prefix' => 'categories'], function () use ($router) {
     $router->post('/{id}', 'CategoryController@update');
     $router->get('/{id}/delete', 'CategoryController@destroy');
 });
+
+
+$router->group(['prefix' => 'blogs'], function () use ($router) {
+    $router->get('/', 'CategoryController@index');
+    $router->post('add', 'CategoryController@store');
+    $router->get('/{id}', 'CategoryController@show');
+    $router->post('/{id}', 'CategoryController@update');
+    $router->get('/{id}/delete', 'CategoryController@destroy');
+});

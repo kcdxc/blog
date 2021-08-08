@@ -20,32 +20,27 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-Route::group(['prefix' => 'auth'], function () use ($router) {
+$router->group(['prefix' => 'auth'], function () use ($router) {
     $router->post('register', 'AuthController@register');
     $router->post('login', 'AuthController@login');
 });
 
-$router->group(['prefix' => 'categories'], function () use ($router) {
-    $router->get('/', 'CategoryController@index');
-    $router->post('add', 'CategoryController@store');
-    $router->get('/{id}', 'CategoryController@show');
-    $router->post('/{id}', 'CategoryController@update');
-    $router->get('/{id}/delete', 'CategoryController@destroy');
-});
-
-
-$router->group(['prefix' => 'blogs'], function () use ($router) {
-    $router->get('/', 'CategoryController@index');
-    $router->post('add', 'CategoryController@store');
-    $router->get('/{id}', 'CategoryController@show');
-    $router->post('/{id}', 'CategoryController@update');
-    $router->get('/{id}/delete', 'CategoryController@destroy');
-});
-
-$router->get('/send-email', function () {
-    $users = User::all();
-    foreach ($users as $user) {
-        dispatch(new SendEmailToSubscriberJob($user));
-    }
-    echo "OK";
+$router->group(['middleware' => 'auth'], function () use ($router) {
+    $router->group(['prefix' => 'categories'], function () use ($router) {
+        $router->get('/', 'CategoryController@index');
+        $router->post('add', 'CategoryController@store');
+        $router->get('/{id}', 'CategoryController@show');
+        $router->post('/{id}', 'CategoryController@update');
+        $router->get('/{id}/delete', 'CategoryController@destroy');
+    });
+    
+    $router->group(['prefix' => 'blogs'], function () use ($router) {
+        $router->get('/', 'CategoryController@index');
+        $router->post('add', 'CategoryController@store');
+        $router->get('/{id}', 'CategoryController@show');
+        $router->post('/{id}', 'CategoryController@update');
+        $router->get('/{id}/delete', 'CategoryController@destroy');
+    });
+    
+    $router->get('/send-email', 'NewsletterController@sendNotification');
 });

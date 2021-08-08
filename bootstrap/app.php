@@ -62,6 +62,7 @@ $app->singleton(
 $app->configure('app');
 $app->configure('queue');
 $app->configure('mail');
+$app->configure('database');
 
 /**
  * Alias
@@ -107,6 +108,7 @@ $app->routeMiddleware([
 $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(Illuminate\Mail\MailServiceProvider::class);
+$app->register(Illuminate\Redis\RedisServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
 
 /*

@@ -8,10 +8,15 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+    
     public function index()
     {
         $categories = Category::all();
-        
+
         return response()->json([
             'success' => true,
             'message' => 'Successfully to load data.',
@@ -25,8 +30,7 @@ class CategoryController extends Controller
             'name' => 'required|string|min:3|max:30'
         ]);
 
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Something wrong.',
@@ -56,7 +60,7 @@ class CategoryController extends Controller
     public function show($id)
     {
         $category = Category::find($id);
-        
+
         return response()->json([
             'success' => true,
             'message' => 'Successfully to load data.',
@@ -70,8 +74,7 @@ class CategoryController extends Controller
             'name' => 'required|string|min:3|max:30'
         ]);
 
-        if ($validator->fails())
-        {
+        if ($validator->fails()) {
             return response()->json([
                 'success' => false,
                 'message' => 'Something wrong.',

@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class BlogController extends Controller
 {
     public function index()
     {

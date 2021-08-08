@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Mail;
 
 class SendEmailToSubscriberJob extends Job
@@ -26,7 +27,7 @@ class SendEmailToSubscriberJob extends Job
     public function handle()
     {
         Mail::send('mails.newsletter', ['email' => $this->dataReceipt->email, 'name' => $this->dataReceipt->name], function ($message) {
-            $message->to($this->dataReceipt->email, $this->dataReceipt->name)->subject('Hello!');
+            $message->to($this->dataReceipt->email, $this->dataReceipt->name)->subject('NEWSLETTER - '.Carbon::now()->format('d/m/Y'));
         });
     }
 }

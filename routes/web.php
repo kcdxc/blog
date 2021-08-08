@@ -2,6 +2,9 @@
 
 /** @var \Laravel\Lumen\Routing\Router $router */
 
+use App\Jobs\SendEmailToSubscriberJob;
+use App\Models\User;
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes
@@ -37,4 +40,12 @@ $router->group(['prefix' => 'blogs'], function () use ($router) {
     $router->get('/{id}', 'CategoryController@show');
     $router->post('/{id}', 'CategoryController@update');
     $router->get('/{id}/delete', 'CategoryController@destroy');
+});
+
+$router->get('/send-email', function () {
+    $users = User::all();
+    foreach ($users as $user) {
+        dispatch(new SendEmailToSubscriberJob($user));
+    }
+    echo "OK";
 });

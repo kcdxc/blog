@@ -35,11 +35,11 @@ $router->group(['middleware' => 'auth'], function () use ($router) {
     });
     
     $router->group(['prefix' => 'blogs'], function () use ($router) {
-        $router->get('/', 'CategoryController@index');
-        $router->post('add', 'CategoryController@store');
-        $router->get('/{id}', 'CategoryController@show');
-        $router->post('/{id}', 'CategoryController@update');
-        $router->get('/{id}/delete', 'CategoryController@destroy');
+        $router->get('/', 'BlogController@index');
+        $router->post('add', 'BlogController@store');
+        $router->get('/{id}', 'BlogController@show');
+        $router->post('/{id}', 'BlogController@update');
+        $router->get('/{id}/delete', 'BlogController@destroy');
     });
     
     $router->get('/send-email', 'NewsletterController@sendNotification');

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Blog;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 
@@ -11,7 +10,7 @@ class BlogController extends Controller
 {
     public function index()
     {
-        $blogs = Blog::all();
+        $blogs = Blog::with('category')->get();
         
         return response()->json([
             'success' => true,
@@ -23,6 +22,7 @@ class BlogController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'category_id' => 'required|integer|exists:categories,id',
             'title' => 'required|string|min:3|max:200',
             'description' => 'required|string|min:3',
             'content' => 'required'
@@ -32,12 +32,13 @@ class BlogController extends Controller
         {
             return response()->json([
                 'success' => false,
-                'message' => 'Request input errors.',
+                'message' => 'Something wrong.',
                 'data' => $validator->errors()
             ]);
         }
 
         $blog = new Blog();
+        $blog->category_id = $request->category_id;
         $blog->title = $request->title;
         $blog->description = $request->description;
         $blog->content = $request->content;
@@ -52,15 +53,15 @@ class BlogController extends Controller
         } else {
             return response()->json([
                 'success' => false,
-                'message' => 'failed save blog',
-                'data' => $blog
+                'message' => 'Failed save blog',
+                'data' => null
             ]);
         }
     }
 
     public function show($id)
     {
-        $blog = Blog::find($id);
+        $blog = Blog::with('category')->where('id', $id)->first();
         
         return response()->json([
             'success' => true,
@@ -72,6 +73,7 @@ class BlogController extends Controller
     public function update($id, Request $request)
     {
         $validator = Validator::make($request->all(), [
+            'category_id' => 'required|integer|exists:categories,id',
             'title' => 'required|string|min:3|max:200',
             'description' => 'required|string|min:3',
             'content' => 'required'
@@ -81,12 +83,13 @@ class BlogController extends Controller
         {
             return response()->json([
                 'success' => false,
-                'message' => 'Request input errors.',
+                'message' => 'Something wrong.',
                 'data' => $validator->errors()
             ]);
         }
 
         $blog = Blog::find($id);
+        $blog->category_id = $request->category_id;
         $blog->title = $request->title;
         $blog->description = $request->description;
         $blog->content = $request->content;
@@ -115,7 +118,7 @@ class BlogController extends Controller
                 'success' => false,
                 'message' => 'Data blog not found',
                 'data' => null
-            ], 404);
+            ]);
         }
 
         $blog->delete();
@@ -123,6 +126,6 @@ class BlogController extends Controller
             'success' => true,
             'message' => 'Successfully delete blog',
             'data' => $blog
-        ], 200);
+        ]);
     }
 }
